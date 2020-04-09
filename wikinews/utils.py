@@ -87,7 +87,7 @@ def get_titles(num):
 
     return titles[:num]
 
-def get_content(title):
+def get_content(title, recursion=False):
     
     wikinews_content = WIKINEWS_CONTENT
     wikinews_content['page'] = normalize(title)
@@ -107,8 +107,10 @@ def get_content(title):
     soup = BeautifulSoup(html, 'html.parser')
     
     if soup.find("div", {'class': "redirectMsg"}) != None:
+        if recursion == True:
+            return {"title": title, "date": "", "passages": []}
         title = soup.find("div", {'class': "redirectMsg"}).a['title']
-        return get_content(title)
+        return get_content(title, recursion=True)
     
     date, passages = passages_from_soup(soup)
     return {"title": title, "date": date, "passages": passages}
