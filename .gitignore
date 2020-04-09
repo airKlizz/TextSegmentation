@@ -10,3 +10,4 @@ wikinews/__pycache__/
 
 # data
 wikinews/data.jsonl
+wikinews/*.txt
