@@ -1,0 +1,12 @@
+# __pycache__
+__pycache__/
+dataset/__pycache__/
+metrics/__pycache__/
+model/__pycache__/
+wikinews/__pycache__/
+
+# .vscode
+.vscode/
+
+# data
+wikinews/data.jsonl
