@@ -7,10 +7,10 @@ from dataset.utils import create_tf_dataset
 from metrics.confusion_matrix import ConfusionMatrix
 
 @tf.function
-def train_step(model, optimizer, loss, inputs, gold, train_loss, train_acc, train_confusion_matrix):
+def train_step(model, optimizer, loss, inputs, gold, mask, train_loss, train_acc, train_confusion_matrix):
     with tf.GradientTape() as tape:
         predictions = model(inputs, training=True)
-        loss_value = loss(gold, predictions)
+        loss_value = loss(gold, predictions, mask)
     gradients = tape.gradient(loss_value, model.trainable_variables)
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
     train_loss(loss_value)
@@ -18,9 +18,9 @@ def train_step(model, optimizer, loss, inputs, gold, train_loss, train_acc, trai
     train_confusion_matrix(gold, predictions)
 
 @tf.function
-def test_step(model, loss, inputs, gold, validation_loss, validation_acc, validation_confusion_matrix):
+def test_step(model, loss, inputs, gold, mask, validation_loss, validation_acc, validation_confusion_matrix):
     predictions = model(inputs, training=False)
-    t_loss = loss(gold, predictions)
+    t_loss = loss(gold, predictions, mask)
     validation_loss(t_loss)
     validation_acc(gold, predictions)
     validation_confusion_matrix(gold, predictions)
@@ -67,11 +67,11 @@ def main(train_path, max_sentences, test_size, batch_size, epochs, learning_rate
         train_confusion_matrix.reset_states()
         validation_confusion_matrix.reset_states()
 
-        for inputs, gold in tqdm(train_dataset, desc="Training in progress", total=int(train_length/batch_size+1)):
-            train_step(model, optimizer, loss, inputs, gold, train_loss, train_acc, train_confusion_matrix)
+        for inputs, gold, mask in tqdm(train_dataset, desc="Training in progress", total=int(train_length/batch_size+1)):
+            train_step(model, optimizer, loss, inputs, gold, mask, train_loss, train_acc, train_confusion_matrix)
 
-        for inputs, gold in tqdm(validation_dataset, desc="Validation in progress", total=int(validation_length/batch_size+1)):
-            test_step(model, loss, inputs, gold, validation_loss, validation_acc, validation_confusion_matrix)
+        for inputs, gold, mask in tqdm(validation_dataset, desc="Validation in progress", total=int(validation_length/batch_size+1)):
+            test_step(model, loss, inputs, gold, mask, validation_loss, validation_acc, validation_confusion_matrix)
 
         if previus_validation_loss > validation_loss.result().numpy():
             previus_validation_loss = validation_loss.result().numpy()
