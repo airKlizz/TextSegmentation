@@ -1,6 +1,8 @@
 import requests
 import json
 from bs4 import BeautifulSoup
+from nltk.tokenize import sent_tokenize
+from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 import re
 import os
@@ -133,3 +135,66 @@ def create_data(num, output):
     os.system('uniq {} uniq.{}'.format(output, output))
     os.system('rm {}'.format(output))
     os.system('mv uniq.{} {}'.format(output, output))
+
+def create_formated_data(input, output):
+    
+    new_doc = 'Article\t{id}\n'
+    new_sentence = 'Sentence\t{id}\t{text}\t{gold}\n'
+    
+    with open(output, 'w') as output_f:
+        with open(input, 'r') as input_f:
+
+            doc_id = 0
+            for line in tqdm(input_f, desc="Reading train file"):
+
+                doc_id += 1
+
+                # Read
+                json_line = json.loads(line)
+                passages = json_line['passages']
+                X_ = []
+                y_ = []
+
+                for passage in passages:
+                    sentences = sent_tokenize(passage)
+                    X_ += sentences
+                    y_ += [1]+[0]*(len(sentences)-1)
+
+                # Write
+                output_f.write(new_doc.format(id=doc_id))
+                for sentence_id, (sentence, gold) in enumerate(zip(X_, y_)):
+                    output_f.write(new_sentence.format(id=sentence_id+1, text=sentence.replace('\n', ''), gold=gold))
+                output_f.write('\n')
+
+def split_data(input, train_output, test_data_output, test_gold_output, test_size=0.2, random_state=2020):
+    
+    # Read
+    with open(input, 'r') as f:
+        data = f.read()
+        articles = data.split('\n\n')[:-1]
+    
+    train_articles, test_articles = train_test_split(articles, random_state=random_state, test_size=test_size)
+    
+    # Write train
+    with open(train_output, 'w') as f:
+        f.write('\n\n'.join(train_articles))
+
+    # Write test
+    with open(test_data_output, 'w') as data_f:
+        with open(test_gold_output, 'w') as gold_f:
+            for article in test_articles:
+                lines = article.split('\n')
+                data_f.write(lines[0]+'\n')
+                gold_f.write(lines[0]+'\n')
+                for line in lines[1:]:
+                    elems = line.split('\t')
+                    data_f.write('\t'.join(elems[:-1])+'\n')
+                    gold_f.write('\t'.join(elems[:-2]+elems[-1:])+'\n')
+                data_f.write('\n')
+                gold_f.write('\n')
+
+def create_train_test_data(input, train_output, test_data_output, test_gold_output, test_size=0.2, random_state=2020):
+    output = 'data.txt'
+    create_formated_data(input, output)
+    split_data(output, train_output, test_data_output, test_gold_output, test_size, random_state)
+    os.system('rm {}'.format(output))
