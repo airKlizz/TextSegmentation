@@ -20,7 +20,10 @@ def create_tf_dataset(train_path='wikinews/train.txt', max_sentences=32, test_si
             sentences = article.split('\n')
             for sentence in sentences[1:]:
                 elems = sentence.split('\t')
-                assert len(elems) == 4
+                if len(elems) != 4:
+                    elems = elems[:2] + [" ".join(elems[2:-1])] + elems[-1:]
+                    print(elems)
+                assert len(elems) == 4, elems
                 X_.append(elems[-2])
                 if int(elems[-1]) == 1:
                     y_.append([0, 1])
