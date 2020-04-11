@@ -5,6 +5,7 @@ import argparse
 from model.segmenter import Segmenter
 from dataset.utils import create_tf_dataset
 from metrics.confusion_matrix import ConfusionMatrix
+from evaluation.utils import create_candidate, eval, print_metrics
 
 @tf.function
 def train_step(model, optimizer, loss, inputs, gold, mask, train_loss, train_acc, train_confusion_matrix):
@@ -25,7 +26,7 @@ def test_step(model, loss, inputs, gold, mask, validation_loss, validation_acc, 
     validation_acc(gold, predictions)
     validation_confusion_matrix(gold, predictions)
 
-def main(train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path):
+def main(train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path, test_data_path, test_gold_path, candidate_path):
     '''
     Load Hugging Face tokenizer and model
     '''
@@ -73,12 +74,6 @@ def main(train_path, max_sentences, test_size, batch_size, epochs, learning_rate
         for inputs, gold, mask in tqdm(validation_dataset, desc="Validation in progress", total=int(validation_length/batch_size+1)):
             test_step(model, loss, inputs, gold, mask, validation_loss, validation_acc, validation_confusion_matrix)
 
-        if previus_validation_loss > validation_loss.result().numpy():
-            previus_validation_loss = validation_loss.result().numpy()
-            model_save_path_step = model_save_path_step_template.format(epoch=epoch, loss=previus_validation_loss)
-            print('Saving: ', model_save_path_step)
-            model.save_weights(model_save_path_step, save_format='h5')
-        
         print(template_epoch.format(epoch+1,
                                 epochs,
                                 train_loss.result(),
@@ -89,14 +84,26 @@ def main(train_path, max_sentences, test_size, batch_size, epochs, learning_rate
                                 validation_confusion_matrix.result()
                                 ))
 
+        create_candidate(model, test_data_path, candidate_path)
+        metrics = eval(test_gold_path, candidate_path)
+        print_metrics(metrics)
+        
+        if previus_validation_loss > validation_loss.result().numpy():
+            previus_validation_loss = validation_loss.result().numpy()
+            model_save_path_step = model_save_path_step_template.format(epoch=epoch, loss=previus_validation_loss)
+            print('Saving: ', model_save_path_step)
+            model.save_weights(model_save_path_step, save_format='h5')
+        
+        
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     '''
     Variables for dataset
     '''
-    parser.add_argument("--train_path", type=str, help="path to the train .tsv file", default="wikinews/data.jsonl")
-    parser.add_argument("--max_sentences", type=int, help="max length of the tokenized input", default=32)
+    parser.add_argument("--train_path", type=str, help="path to the train file", default="wikinews/train.txt")
+    parser.add_argument("--max_sentences", type=int, help="Number max of sentences in the text", default=32)
     parser.add_argument("--test_size", type=float, help="ratio of the test dataset", default=0.2)
     parser.add_argument("--batch_size", type=int, help="batch size", default=12)
     
@@ -108,9 +115,16 @@ if __name__ == "__main__":
     parser.add_argument("--epsilon", type=float, help="epsilon", default=1e-8)
     parser.add_argument("--clipnorm", type=float, help="clipnorm", default=1.0)
     parser.add_argument("--save_path", type=str, help="path to the save folder", default="model/saved_weights/")
+
+    '''
+    Variables for evaluation
+    '''
+    parser.add_argument("--test_data_path", type=str, help="path to the test data file", default="wikinews/test.data.txt")
+    parser.add_argument("--test_gold_path", type=str, help="path to the test gold file", default="wikinews/test.gold.txt")
+    parser.add_argument("--candidate_path", type=str, help="path to the candidate file to save predictions", default="wikinews/text.run.txt")
     
     '''
     Run main
     '''
     args = parser.parse_args()
-    main(args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path)
+    main(args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path, args.test_data_path, args.test_gold_path, args.candidate_path)
