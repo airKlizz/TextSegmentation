@@ -54,6 +54,7 @@ def create_candidate(model, test_data_input, output):
                 y_ = model([X_], prepare_inputs=True)
                 y_ = tf.argmax(y_, axis=-1)
                 y_ = list(tf.reshape(y_, (-1, )).numpy())[:len(text_)]
+                y_ = y_ + [0] * (len(text_)-len(y_))
                 assert len(y_) == len(X_), y_
 
                 # Write
