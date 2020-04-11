@@ -53,7 +53,7 @@ def create_candidate(model, test_data_input, output):
                 if len(X_) == 0: continue
                 y_ = model([X_], prepare_inputs=True)
                 y_ = tf.argmax(y_, axis=-1)
-                y_ = list(tf.reshape(y_, (-1, )).numpy())
+                y_ = list(tf.reshape(y_, (-1, )).numpy())[:len(text_)]
                 assert len(y_) == len(X_), y_
 
                 # Write
