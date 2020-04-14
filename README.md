@@ -116,13 +116,11 @@ pip install -r requirements.txt
 
 #### Download data:
 
-You can download the ``data.jsonl`` file [here](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy). Then move the file to ``wikinews/`` and run ``create_train_test_data.py`` (See [above](#create-train-and-test-files)).
-
-Otherwise you can recreate the ``data.jsonl`` file (See [above](#reproduce-the-dataset)).
+You can download the ``data.jsonl`` file [here](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy). Otherwise you can recreate the ``data.jsonl`` file (See [above](#reproduce-the-dataset)). Then move the file to ``wikinews/`` and run ``create_train_test_data.py`` (See [above](#create-train-and-test-files)).
 
 ### Training
 
-[![Open In Colab]()
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
 
 ```
 python train.py --learning_rate 0.001 \
@@ -135,11 +133,10 @@ To see full usage of ``train.py``, run ``python train.py --help``.
 
 ### Evaluation
 
-[![Open In Colab]()
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
 
 ### Use pre-trained models
-
-[![Open In Colab]()
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
