@@ -8,7 +8,12 @@ Wikinews passages dataset and code to train a segmenter model to find passages s
 
 | Table of contents |
 | ----------------- |
-| Part 1. |
+| [Dataset](#dataset) |
+| [Task](#task) |
+| [My Model](#my-model) |
+| [Results](#results) |
+| [Getting started](#getting-started) |
+| [License](#license) |
 
 ## Dataset
 
@@ -120,7 +125,7 @@ You can download the ``data.jsonl`` file [here](https://drive.google.com/open?id
 
 ### Training
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xGrA3zXgeSkltANMOXw55FyZpE0zfkdh#scrollTo=eR_q6FLoIf43)
 
 ```
 python train.py --learning_rate 0.001 \
@@ -131,12 +136,14 @@ python train.py --learning_rate 0.001 \
 
 To see full usage of ``train.py``, run ``python train.py --help``.
 
+*Remark: During training the accuracy can be very low. It is because the model does not train on padding sentences and so these padding sentences are not predicted well.*
+
 ### Evaluation
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1PAb22GA_vCOb4kWLFva1-8mimkRwkQt0#scrollTo=sTPYIV1wdhyS)
 
 ### Use pre-trained models
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1zio9edyZGBVH3bSU9dM05uqLjateE7ll#scrollTo=4Gs-MrT7BNxy)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
