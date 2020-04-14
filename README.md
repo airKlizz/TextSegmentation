@@ -98,7 +98,7 @@ The result and the model weight are obtained after a training with parameters :
 | --- | ----------- | --- | ----------- |
 | My Model | 0.761 | 0.757 | 0.758 | 
 
-Saved weights of the model available [here]().
+Saved weights of the model available [here](https://github.com/airKlizz/TextSegmentation/releases/download/v1.0-model.weights/segmenter.h5).
 
 
 ## Getting started
