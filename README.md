@@ -1,4 +1,5 @@
 **To do:**
+- [ ] Comment results
 - [ ] Try others sentences embedding models or transformers models
 - [ ] Create CNN dataset and compore results
 
