@@ -102,7 +102,7 @@ if __name__ == "__main__":
     '''
     Variables for dataset
     '''
-    parser.add_argument("--bidirectional", type=bool, help="True if you want a bidirectional RNN", default=False)
+    parser.add_argument("--bidirectional", type=bool, help="True if you want a bidirectional RNN", default=True)
 
     '''
     Variables for dataset

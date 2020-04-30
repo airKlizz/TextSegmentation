@@ -8,6 +8,7 @@ class Segmenter(tf.keras.Model):
         self.max_sentences = max_sentences
         self.embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder-large/5", output_shape=[512], input_shape=[], dtype=tf.string)
         if bidirectional:
+            print('Bidirectional recurrent layer')
             self.recurrent = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(256, input_shape=(None, 512), return_sequences=True))
         else:
             self.recurrent = tf.keras.layers.GRU(256, input_shape=(None, 512), return_sequences=True)
