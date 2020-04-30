@@ -1,0 +1,7 @@
+beautifulsoup4
+json5
+nltk
+numpy
+tensorflow
+tensorflow-hub
+tqdm

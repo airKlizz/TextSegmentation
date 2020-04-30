@@ -26,11 +26,11 @@ def test_step(model, loss, inputs, gold, mask, validation_loss, validation_acc, 
     validation_acc(gold, predictions)
     validation_confusion_matrix(gold, predictions)
 
-def main(train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path, test_data_path, test_gold_path, candidate_path):
+def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path, test_data_path, test_gold_path, candidate_path):
     '''
     Load Hugging Face tokenizer and model
     '''
-    model = Segmenter(max_sentences)
+    model = Segmenter(max_sentences, bidirectional)
 
     '''
     Create train and validation dataset
@@ -102,6 +102,11 @@ if __name__ == "__main__":
     '''
     Variables for dataset
     '''
+    parser.add_argument("--bidirectional", type=bool, help="True if you want a bidirectional RNN", default=False)
+
+    '''
+    Variables for dataset
+    '''
     parser.add_argument("--train_path", type=str, help="path to the train file", default="wikinews/train.txt")
     parser.add_argument("--max_sentences", type=int, help="Number max of sentences in the text", default=32)
     parser.add_argument("--test_size", type=float, help="ratio of the test dataset", default=0.2)
@@ -127,4 +132,4 @@ if __name__ == "__main__":
     Run main
     '''
     args = parser.parse_args()
-    main(args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path, args.test_data_path, args.test_gold_path, args.candidate_path)
+    main(args.bidirectional, args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path, args.test_data_path, args.test_gold_path, args.candidate_path)
