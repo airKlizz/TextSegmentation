@@ -20,7 +20,7 @@ Wikinews and CNN passages dataset and code to train a segmenter model to find pa
 
 ### Wikinews
 
-The dataset in composed of 18997 Wikinews articles segmented in passages according to the author of the news. All the data is in the ``wikinews.data.jsonl`` file. The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
+The dataset in composed of 18997 Wikinews articles segmented in passages according to the author of the news. All the data is in the ``wikinews.data.jsonl`` file ([download](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy)). The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
 
 #### Reproduce the dataset
 
@@ -78,7 +78,7 @@ Sentence  2 Text of the sentence 2. label
 
 ### CNN News
 
-The dataset in composed of more than 93000 CNN news articles segmented in passages according to the author of the news. Stories are from the [DeepMind Q&A dataset](https://cs.nyu.edu/~kcho/DMQA/). All the data is in the ``cnn.data.jsonl`` file. The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
+The dataset in composed of more than 93000 CNN news articles segmented in passages according to the author of the news. Stories are from the [DeepMind Q&A dataset](https://cs.nyu.edu/~kcho/DMQA/). All the data is in the ``cnn.data.jsonl`` file ([download](https://drive.google.com/open?id=1WzG7-LyQg7vlborMuUwhNPZfZfI8dQgX)). The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
 
 #### Reproduce the dataset
 
@@ -109,11 +109,13 @@ The objective is that passages contain one information. In the best case passage
 
 ## My Model
 
-The model is composed of a [pre-trained sentence encoder from tf hub](https://tfhub.dev/google/universal-sentence-encoder-large/5) follows by a recurrent layer on each sentence and then a classification layer. 
+The model is composed of a sentence encoder ([pre-trained sentence encoder from tf hub](https://tfhub.dev/google/universal-sentence-encoder-large/5) or [transformer from HuggingFace](https://huggingface.co/transformers/)) follows by a recurrent layer (simple or bidirectional) on each sentence and then a classification layer. 
 
 <img src="model/model.png" alt="Architecture of the model" width="800"/>
 
 ## Results
+
+### TF Hub sentence encoder and simple recurrent layer
 
 The result and the model weight are obtained after a training with parameters :
 
@@ -124,7 +126,8 @@ The result and the model weight are obtained after a training with parameters :
 
 |  | Precision | Recall | Fscore |
 | --- | ----------- | --- | ----------- |
-| My Model | 0.761 | 0.757 | 0.758 | 
+| wikinews | 0.761 | 0.757 | 0.758 | 
+| cnn | 0.0 | 0.0 | 0.0 | 
 
 Saved weights of the model available [here](https://github.com/airKlizz/TextSegmentation/releases/download/v1.0-model.weights/segmenter.h5).
 
@@ -150,7 +153,7 @@ pip install -r requirements.txt
 
 #### Download data:
 
-You can download the ``data.jsonl`` file [here](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy). Otherwise you can recreate the ``data.jsonl`` file (See [above](#reproduce-the-dataset)). Then move the file to ``wikinews/`` and run ``create_train_test_data.py`` (See [above](#create-train-and-test-files)).
+You can download the ``wikinews.data.jsonl`` file [here](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy) or the ``wikinews.data.jsonl`` file [here](https://drive.google.com/open?id=1WzG7-LyQg7vlborMuUwhNPZfZfI8dQgX). Otherwise you can recreate the ``data.jsonl`` file (See above). Then move the file to ``data/`` and run ``create_train_test_data.py`` with the correct ``--input`` (See [above](#create-train-and-test-files)).
 
 ### Training
 
@@ -160,7 +163,7 @@ You can download the ``data.jsonl`` file [here](https://drive.google.com/open?id
 python train.py --learning_rate 0.001 \
                 --max_sentences 64 \
                 --epochs 8 \
-                --train_path "wikinews/train.txt"
+                --train_path "data/train.txt"
 ```
 
 To see full usage of ``train.py``, run ``python train.py --help``.
