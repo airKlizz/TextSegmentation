@@ -3,9 +3,9 @@
 - [ ] Try others sentences embedding models or transformers models
 - [ ] Create CNN dataset and compare results
 
-# Text segmentation task on Wikinews data
+# Text segmentation task on Wikinews and CNN data
 
-Wikinews passages dataset and code to train a segmenter model to find passages segmentation from continuous text.
+Wikinews and CNN passages dataset and code to train a segmenter model to find passages segmentation from continuous text.
 
 | Table of contents |
 | ----------------- |
@@ -18,32 +18,34 @@ Wikinews passages dataset and code to train a segmenter model to find passages s
 
 ## Dataset
 
-The dataset in composed of 18997 Wikinews articles segmented in passages according to the author of the news. All the data is in the ``data.jsonl`` file. The ``wikinews/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
+### Wikinews
 
-### Reproduce the dataset
+The dataset in composed of 18997 Wikinews articles segmented in passages according to the author of the news. All the data is in the ``wikinews.data.jsonl`` file. The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
 
-``data.jsonl`` file is composed by an article per line. The article is saved in json format:
+#### Reproduce the dataset
+
+``wikinews.data.jsonl`` file is composed by an article per line. The article is saved in json format:
 
 ```
 {"title": "Title of the article", "date": "Weekday, Month Day, Year", "passages": ["Passage 1.", "Passage 2.", ...]}
 ```
 
-You can create your own ``data.jsonl`` file by running the following command:
+You can create your own ``wikinews.data.jsonl`` file by running the following command:
 
 ```
-cd wikinews/
+cd data/
 python create_data.py --num 40000 \
-                      --output "data.jsonl"
+                      --output "wikinews.data.jsonl"
 ```
 *Remark: ``--num`` is the number of wikinews articles to use. The final number of data is less than this number because certain articles are depreciated*
 
-### Create train and test files
+#### Create train and test files
 
-To make the training easier, I recommend to transform the ``data.jsonl`` file into ``train.txt`` and ``test.data.txt`` and ``test.gold.txt`` by running the following command:
+To make the training easier, I recommend to transform the ``wikinews.data.jsonl`` file into ``train.txt`` and ``test.data.txt`` and ``test.gold.txt`` by running the following command:
 
 ```
-cd wikinews/
-python create_train_test_data.py --input "data.jsonl" \
+cd data/
+python create_train_test_data.py --input "wikinews.data.jsonl" \
                                  --train_output "train.txt" \
                                  --test_data_output "test.data.txt" \
                                  --test_gold_output "test.gold.txt"
@@ -72,6 +74,32 @@ Sentence  2 Text of the sentence 2. label
 ``test.data.txt`` does not contain the label element of sentences.
 
 ``test.gold.txt`` does not contain the text element of sentences.
+
+
+### CNN News
+
+The dataset in composed of more than 93000 CNN news articles segmented in passages according to the author of the news. Stories are from the [DeepMind Q&A dataset](https://cs.nyu.edu/~kcho/DMQA/). All the data is in the ``cnn.data.jsonl`` file. The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
+
+#### Reproduce the dataset
+
+``cnn.data.jsonl`` file is composed by an article per line. The article is saved in json format:
+
+```
+{"title": "", "date": "", "passages": ["Passage 1.", "Passage 2.", ...]}
+```
+*Remark: There was no title and date in the stories DeepMind Q&A dataset so the fields ``"title"`` and ``"date"`` are always empty. I leave them to have the same format that for ``wikinews.data.jsonl``.* 
+
+To create ``cnn.data.jsonl``, you have first to download all stories [here](https://drive.google.com/uc?export=download&id=0BwmD_VLjROrfTHk4NFg2SndKcjQ) and extract the archive in the ``data/`` folder. Then you have to run:
+
+```
+cd data/
+python create_data_cnn.py --directory path/to/the/stories/directory \
+                      --output "cnn.data.jsonl"
+```
+
+#### Create train and test files
+
+Same command that for Wikinews except change the input by ``cnn.data.jsonl``.
 
 ## Task
 
