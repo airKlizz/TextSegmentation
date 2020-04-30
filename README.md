@@ -109,11 +109,13 @@ The objective is that passages contain one information. In the best case passage
 
 ## My Model
 
-The model is composed of a [pre-trained sentence encoder from tf hub](https://tfhub.dev/google/universal-sentence-encoder-large/5) follows by a recurrent layer on each sentence and then a classification layer. 
+The model is composed of a sentence encoder ([pre-trained sentence encoder from tf hub](https://tfhub.dev/google/universal-sentence-encoder-large/5) or [transformer from HuggingFace](https://huggingface.co/transformers/)) follows by a recurrent layer (simple or bidirectional) on each sentence and then a classification layer. 
 
 <img src="model/model.png" alt="Architecture of the model" width="800"/>
 
 ## Results
+
+### TF Hub sentence encoder and simple recurrent layer
 
 The result and the model weight are obtained after a training with parameters :
 
@@ -124,7 +126,8 @@ The result and the model weight are obtained after a training with parameters :
 
 |  | Precision | Recall | Fscore |
 | --- | ----------- | --- | ----------- |
-| My Model | 0.761 | 0.757 | 0.758 | 
+| wikinews | 0.761 | 0.757 | 0.758 | 
+| cnn | 0.0 | 0.0 | 0.0 | 
 
 Saved weights of the model available [here](https://github.com/airKlizz/TextSegmentation/releases/download/v1.0-model.weights/segmenter.h5).
 
