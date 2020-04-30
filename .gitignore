@@ -9,8 +9,9 @@ wikinews/__pycache__/
 .vscode/
 
 # data
-wikinews/data.jsonl
-wikinews/*.txt
+data/*.jsonl
+data/*.txt
+data/stories/
 
 # test
 test.py

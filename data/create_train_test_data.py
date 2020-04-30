@@ -2,7 +2,7 @@ import argparse
 from utils import create_train_test_data
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--input", help='Path to the .jsonl data file', type=str, default='data.jsonl')
+parser.add_argument("--input", help='Path to the .jsonl data file', type=str, default='wikinews.data.jsonl')
 parser.add_argument("--train_output", help='Name of the train output file', type=str, default='train.txt')
 parser.add_argument("--test_data_output", help='Name of the test data output file', type=str, default='test.data.txt')
 parser.add_argument("--test_gold_output", help='Name of the test gold output file', type=str, default='test.gold.txt')

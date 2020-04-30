@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 import re
 import os
+from os import listdir
 
 WIKINEWS_URL = 'https://en.wikinews.org/w/api.php'
 WIKINEWS_ALLPAGES = {
@@ -117,7 +118,7 @@ def get_content(title, recursion=False):
     date, passages = passages_from_soup(soup)
     return {"title": title, "date": date, "passages": passages}
 
-def create_data(num, output):
+def create_data_wikinews(num, output):
     
     # get titles
     titles = get_titles(num)
@@ -198,3 +199,74 @@ def create_train_test_data(input, train_output, test_data_output, test_gold_outp
     create_formated_data(input, output)
     split_data(output, train_output, test_data_output, test_gold_output, test_size, random_state)
     os.system('rm {}'.format(output))
+
+''' Many functions since the part of utils.py are from: https://machinelearningmastery.com/prepare-news-articles-text-summarization/ '''
+
+# load doc into memory
+def load_doc(filename):
+	# open the file as read only
+	file = open(filename, encoding='utf-8')
+	# read all text
+	text = file.read()
+	# close the file
+	file.close()
+	return text
+
+# load all stories in a directory
+def load_stories(directory):
+	for name in listdir(directory):
+		filename = directory + '/' + name
+		# load document
+		doc = load_doc(filename)
+
+# split a document into news story and highlights
+def split_story(doc):
+	# find first highlight
+	index = doc.find('@highlight')
+	# split into story and highlights
+	story, highlights = doc[:index], doc[index:].split('@highlight')
+	# strip extra white space around each highlight
+	highlights = [h.strip() for h in highlights if len(h) > 0]
+	return story, highlights
+
+# load all stories in a directory
+def load_stories(directory):
+	all_stories = list()
+	for name in listdir(directory):
+		filename = directory + '/' + name
+		# load document
+		doc = load_doc(filename)
+		# split into story and highlights
+		story, highlights = split_story(doc)
+		# store
+		all_stories.append({'story':story, 'highlights':highlights})
+	return all_stories
+
+def get_passages(story):
+    lines = story.split('\n\n')
+    passages = []
+    for line in lines:
+        index = line.find('(CNN)  -- ')
+        if index > -1:
+            line = line[index+len('(CNN)  -- '):]
+        index = line.find('(CNN) -- ')
+        if index > -1:
+            line = line[index+len('(CNN) -- '):]
+        index = line.find('(CNN)')
+        if index > -1:
+            line = line[index+len('(CNN)'):]
+        if len(line) > 0:
+            passages.append(line)
+    return passages
+
+def create_data_cnn(directory, output):
+    stories = load_stories(directory)
+    # write content
+    with open(output, 'w') as f:
+        for story in stories:
+            passages = get_passages(story['story'])
+            content = {"title": 'title', "date": 'date', "passages": passages}
+            if len(content['passages']) == 0:
+                continue
+            json.dump(content, f)
+            f.write('\n')
