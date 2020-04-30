@@ -20,7 +20,7 @@ Wikinews and CNN passages dataset and code to train a segmenter model to find pa
 
 ### Wikinews
 
-The dataset in composed of 18997 Wikinews articles segmented in passages according to the author of the news. All the data is in the ``wikinews.data.jsonl`` file. The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
+The dataset in composed of 18997 Wikinews articles segmented in passages according to the author of the news. All the data is in the ``wikinews.data.jsonl`` file ([download](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy)). The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
 
 #### Reproduce the dataset
 
@@ -78,7 +78,7 @@ Sentence  2 Text of the sentence 2. label
 
 ### CNN News
 
-The dataset in composed of more than 93000 CNN news articles segmented in passages according to the author of the news. Stories are from the [DeepMind Q&A dataset](https://cs.nyu.edu/~kcho/DMQA/). All the data is in the ``cnn.data.jsonl`` file. The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
+The dataset in composed of more than 93000 CNN news articles segmented in passages according to the author of the news. Stories are from the [DeepMind Q&A dataset](https://cs.nyu.edu/~kcho/DMQA/). All the data is in the ``cnn.data.jsonl`` file ([download](https://drive.google.com/open?id=1WzG7-LyQg7vlborMuUwhNPZfZfI8dQgX)). The ``data/`` folder contains scripts to convert the ``.jsonl`` file into train and test files.
 
 #### Reproduce the dataset
 
@@ -150,7 +150,7 @@ pip install -r requirements.txt
 
 #### Download data:
 
-You can download the ``data.jsonl`` file [here](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy). Otherwise you can recreate the ``data.jsonl`` file (See [above](#reproduce-the-dataset)). Then move the file to ``wikinews/`` and run ``create_train_test_data.py`` (See [above](#create-train-and-test-files)).
+You can download the ``wikinews.data.jsonl`` file [here](https://drive.google.com/open?id=1E3mfjgL3Z-r8hNGXMrclsLTlBBEyYpFy) or the ``wikinews.data.jsonl`` file [here](https://drive.google.com/open?id=1WzG7-LyQg7vlborMuUwhNPZfZfI8dQgX). Otherwise you can recreate the ``data.jsonl`` file (See above). Then move the file to ``data/`` and run ``create_train_test_data.py`` with the correct ``--input`` (See [above](#create-train-and-test-files)).
 
 ### Training
 
@@ -160,7 +160,7 @@ You can download the ``data.jsonl`` file [here](https://drive.google.com/open?id
 python train.py --learning_rate 0.001 \
                 --max_sentences 64 \
                 --epochs 8 \
-                --train_path "wikinews/train.txt"
+                --train_path "data/train.txt"
 ```
 
 To see full usage of ``train.py``, run ``python train.py --help``.
