@@ -26,7 +26,7 @@ def test_step(model, loss, inputs, gold, mask, validation_loss, validation_acc, 
     validation_acc(gold, predictions)
     validation_confusion_matrix(gold, predictions)
 
-def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path, test_data_path, test_gold_path, candidate_path):
+def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path, test_data_path, test_gold_path, candidate_path, evaluation_every_epoch):
     '''
     Load Hugging Face tokenizer and model
     '''
@@ -83,10 +83,10 @@ def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs
                                 validation_acc.result(),
                                 validation_confusion_matrix.result()
                                 ))
-
-        create_candidate(model, test_data_path, candidate_path)
-        metrics = eval(test_gold_path, candidate_path)
-        print_metrics(metrics)
+        if evaluation_every_epoch:
+            create_candidate(model, test_data_path, candidate_path)
+            metrics = eval(test_gold_path, candidate_path)
+            print_metrics(metrics)
         
         if previus_validation_loss > validation_loss.result().numpy():
             previus_validation_loss = validation_loss.result().numpy()
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     '''
     Variables for dataset
     '''
-    parser.add_argument("--train_path", type=str, help="path to the train file", default="wikinews/train.txt")
+    parser.add_argument("--train_path", type=str, help="path to the train file", default="data/train.txt")
     parser.add_argument("--max_sentences", type=int, help="Number max of sentences in the text", default=32)
     parser.add_argument("--test_size", type=float, help="ratio of the test dataset", default=0.2)
     parser.add_argument("--batch_size", type=int, help="batch size", default=12)
@@ -124,12 +124,13 @@ if __name__ == "__main__":
     '''
     Variables for evaluation
     '''
-    parser.add_argument("--test_data_path", type=str, help="path to the test data file", default="wikinews/test.data.txt")
-    parser.add_argument("--test_gold_path", type=str, help="path to the test gold file", default="wikinews/test.gold.txt")
-    parser.add_argument("--candidate_path", type=str, help="path to the candidate file to save predictions", default="wikinews/text.run.txt")
+    parser.add_argument("--test_data_path", type=str, help="path to the test data file", default="data/test.data.txt")
+    parser.add_argument("--test_gold_path", type=str, help="path to the test gold file", default="data/test.gold.txt")
+    parser.add_argument("--candidate_path", type=str, help="path to the candidate file to save predictions", default="data/text.run.txt")
+    parser.add_argument("--evaluation_every_epoch", type=bool, help="True if you want to evaluate at every epochs", default=False)
     
     '''
     Run main
     '''
     args = parser.parse_args()
-    main(args.bidirectional, args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path, args.test_data_path, args.test_gold_path, args.candidate_path)
+    main(args.bidirectional, args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path, args.test_data_path, args.test_gold_path, args.candidate_path, args.evaluation_every_epoch)
