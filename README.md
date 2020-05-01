@@ -1,7 +1,6 @@
 **To do:**
 - [ ] Comment results
 - [ ] Try others sentences embedding models or transformers models
-- [ ] Create CNN dataset and compare results
 
 # Text segmentation task on Wikinews and CNN data
 
@@ -115,8 +114,6 @@ The model is composed of a sentence encoder ([pre-trained sentence encoder from 
 
 ## Results
 
-### TF Hub sentence encoder and simple recurrent layer
-
 The result and the model weight are obtained after a training with parameters :
 
   - ``learning_rate = 0.001``
@@ -124,12 +121,28 @@ The result and the model weight are obtained after a training with parameters :
   - ``epochs = 8``
   - ``max_sentences = 64`` (Number max of sentences per article)
 
-|  | Precision | Recall | Fscore |
-| --- | ----------- | --- | ----------- |
-| wikinews | 0.761 | 0.757 | 0.758 | 
-| cnn | 0.0 | 0.0 | 0.0 | 
+### TF Hub sentence encoder, simple recurrent layer and 1 classification layer
 
-Saved weights of the model available [here](https://github.com/airKlizz/TextSegmentation/releases/download/v1.0-model.weights/segmenter.h5).
+|  | Precision | Recall | Fscore | Saved weights |
+| --- | ----------- | --- | ----------- | -------|
+| wikinews | 0.761 | 0.757 | 0.758 | [here](https://github.com/airKlizz/TextSegmentation/releases/download/v1.0-model.weights/segmenter.h5) |
+| cnn | xxx | xxx | xxx | xxx |
+
+
+### TF Hub sentence encoder, bidirectional recurrent layer and 1 classification layer
+
+|  | Precision | Recall | Fscore | Saved weights |
+| --- | ----------- | --- | ----------- | -------|
+| wikinews | 0.769 | 0.767 | 0.767 | [here]() |
+| cnn | 0.781 | 0.783 | 0.782 | [here]() |
+
+
+### TF Hub sentence encoder, bidirectional recurrent layer and 2 classification layer
+
+|  | Precision | Recall | Fscore | Saved weights |
+| --- | ----------- | --- | ----------- | -------|
+| wikinews | 0.784 | 0.781 | 0.782 | [here]() |
+| cnn | 0.0 | 0.0 | 0.0 | [here]() |
 
 
 ## Getting started
