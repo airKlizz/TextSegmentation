@@ -26,11 +26,11 @@ def test_step(model, loss, inputs, gold, mask, validation_loss, validation_acc, 
     validation_acc(gold, predictions)
     validation_confusion_matrix(gold, predictions)
 
-def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path, test_data_path, test_gold_path, candidate_path, evaluation_every_epoch):
+def main(bidirectional, num_classification_layers, train_path, max_sentences, test_size, batch_size, epochs, learning_rate, epsilon, clipnorm, save_path, test_data_path, test_gold_path, candidate_path, evaluation_every_epoch):
     '''
     Load Hugging Face tokenizer and model
     '''
-    model = Segmenter(max_sentences, bidirectional)
+    model = Segmenter(max_sentences, bidirectional, num_classification_layers)
 
     '''
     Create train and validation dataset
@@ -62,7 +62,7 @@ def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs
     print('Evaluation every epoch: {}'.format(evaluation_every_epoch))
 
     for epoch in range(epochs):
-        train_loss.reset_states()
+        train_loss.reset_states() 
         validation_loss.reset_states()
         train_acc.reset_states()
         validation_acc.reset_states()
@@ -106,6 +106,7 @@ if __name__ == "__main__":
     Variables for dataset
     '''
     parser.add_argument("--bidirectional", type=bool, help="True if you want a bidirectional RNN", default=True)
+    parser.add_argument("--num_classification_layers", type=int, help="number classification layers", default=1)
 
     '''
     Variables for dataset
@@ -136,4 +137,4 @@ if __name__ == "__main__":
     Run main
     '''
     args = parser.parse_args()
-    main(args.bidirectional, args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path, args.test_data_path, args.test_gold_path, args.candidate_path, args.evaluation_every_epoch)
+    main(args.bidirectional, args.num_classification_layers, args.train_path, args.max_sentences, args.test_size, args.batch_size, args.epochs, args.learning_rate, args.epsilon, args.clipnorm, args.save_path, args.test_data_path, args.test_gold_path, args.candidate_path, args.evaluation_every_epoch)
