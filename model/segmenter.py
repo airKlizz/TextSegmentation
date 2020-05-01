@@ -3,7 +3,7 @@ import tensorflow_hub as hub
 import numpy as np
 
 class Segmenter(tf.keras.Model):
-    def __init__(self, max_sentences, bidirectional, num_classification_layers=1):
+    def __init__(self, max_sentences, bidirectional, num_classification_layers):
         super(Segmenter, self).__init__(name='Segmenter')
         self.max_sentences = max_sentences
         self.embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder-large/5", output_shape=[512], input_shape=[], dtype=tf.string)
