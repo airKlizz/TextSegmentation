@@ -59,6 +59,7 @@ def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs
     model_save_path_step_template = save_path+'segmenter_epoch_{epoch:04d}_loss_{loss:.3f}.h5'
     template_epoch = '\nEpoch {}/{}: \nTrain Loss: {}, Acc: {}, Confusion matrix:\n{}\nValidation Loss: {}, Acc: {}, Confusion matrix:\n{}'
     previus_validation_loss = 10000000
+    print('Evaluation every epoch: {}'.format(evaluation_every_epoch))
 
     for epoch in range(epochs):
         train_loss.reset_states()
@@ -83,7 +84,7 @@ def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs
                                 validation_acc.result(),
                                 validation_confusion_matrix.result()
                                 ))
-        if evaluation_every_epoch:
+        if evaluation_every_epoch == True:
             create_candidate(model, test_data_path, candidate_path)
             metrics = eval(test_gold_path, candidate_path)
             print_metrics(metrics)
@@ -93,6 +94,8 @@ def main(bidirectional, train_path, max_sentences, test_size, batch_size, epochs
             model_save_path_step = model_save_path_step_template.format(epoch=epoch, loss=previus_validation_loss)
             print('Saving: ', model_save_path_step)
             model.save_weights(model_save_path_step, save_format='h5')
+
+        print('\n===========================================\n')
         
         
 

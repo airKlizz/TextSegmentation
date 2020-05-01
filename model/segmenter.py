@@ -3,16 +3,21 @@ import tensorflow_hub as hub
 import numpy as np
 
 class Segmenter(tf.keras.Model):
-    def __init__(self, max_sentences, bidirectional):
+    def __init__(self, max_sentences, bidirectional, num_classification_layers=1):
         super(Segmenter, self).__init__(name='Segmenter')
         self.max_sentences = max_sentences
         self.embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder-large/5", output_shape=[512], input_shape=[], dtype=tf.string)
+        
         if bidirectional:
             print('Bidirectional recurrent layer')
             self.recurrent = tf.keras.layers.Bidirectional(tf.keras.layers.GRU(256, input_shape=(None, 512), return_sequences=True))
         else:
             self.recurrent = tf.keras.layers.GRU(256, input_shape=(None, 512), return_sequences=True)
-        self.classification = tf.keras.layers.Dense(2, activation='softmax')
+        
+        self.classification_layers = []
+        for i in range(num_classification_layers-1):
+            self.classification_layers.append(tf.keras.layers.Dense(128, activation='relu'))
+        self.classification_layers.append(tf.keras.layers.Dense(2, activation='softmax'))
 
     def call(self, inputs, prepare_inputs=False):
         if prepare_inputs:
@@ -21,7 +26,8 @@ class Segmenter(tf.keras.Model):
         x = self.embed(x) # (batch size * max_sentences, 512)
         x = tf.reshape(x, [-1, self.max_sentences, 512]) # (batch size, num sentences, 512)
         x = self.recurrent(x) # (batch size, max_sentences, 256)
-        x = self.classification(x) # (batch size, max_sentences, 2)
+        for classification_layer in self.classification_layers:
+            x = classification_layer(x)
         return x
 
     @staticmethod
