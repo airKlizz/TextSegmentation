@@ -142,7 +142,7 @@ The result and the model weight are obtained after a training with parameters :
 |  | Precision | Recall | Fscore | Saved weights |
 | --- | ----------- | --- | ----------- | -------|
 | wikinews | 0.784 | 0.781 | 0.782 | [here]() |
-| cnn | 0.0 | 0.0 | 0.0 | [here]() |
+| cnn | 0.786 | 0.790 | 0.788 | [here]() |
 
 
 ## Getting started
