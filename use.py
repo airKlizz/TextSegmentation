@@ -5,8 +5,8 @@ from nltk.tokenize import sent_tokenize
 
 class TextSegmenter():
 
-    def __init__(self, model_weights):
-        self.model = Segmenter(64)
+    def __init__(self, model_weights, bidirectional, num_classification_layers, max_sentences=64):
+        self.model = Segmenter(max_sentences, bidirectional, num_classification_layers)
         _ = self.model([['Sentence 0', 'sentence 1', 'sentence 3'], ['Sentence 0', 'sentence 1', 'sentence 3']], prepare_inputs=True)
         self.model.load_weights(model_weights)
 
