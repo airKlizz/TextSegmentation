@@ -24,7 +24,7 @@ class TextSegmenter():
                 passage = sentence
             else:
                 passage += ' '+sentence
-            passages.append(passage)
+        passages.append(passage)
         return passages
 
     @staticmethod
